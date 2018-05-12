@@ -99,9 +99,9 @@ public class FileUtil {
 
             labels.add(new JLabel("Please enter Search Text: "));
             controls.add(searchText);
-            labels.add(new JLabel("Please The replacement Text: "));
+            labels.add(new JLabel("Please enter replacement Text: "));
             controls.add(replacementText);
-            labels.add(new JLabel("Please The result File Name: "));
+            labels.add(new JLabel("Please enter result File Name: "));
             controls.add(newFileName);
             submit = new JButton("Submit");
             listener = new SearchTextActionListener(submit, searchText, replacementText, newFileName, selectedFile, main);
