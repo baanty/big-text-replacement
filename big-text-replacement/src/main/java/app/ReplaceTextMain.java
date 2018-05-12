@@ -6,6 +6,7 @@ import java.nio.file.FileAlreadyExistsException;
 
 import common.FileType;
 import common.ProcessorFactory;
+import common.StreamProcessor;
 import util.InputPreProcessor;
 
 public class ReplaceTextMain {
@@ -32,12 +33,16 @@ public class ReplaceTextMain {
         try {
             File inputFile = InputPreProcessor.getInputFile(inputFileString, fileType);
             File outputFile = InputPreProcessor.getOutputFile(outputFileString, fileType, inputFile);
-            FACTORY.getStreamProcessor(fileType, inputFile, outputFile, stringToReplace, newString);
+            StreamProcessor processor = FACTORY.getStreamProcessor(fileType, inputFile, outputFile, stringToReplace, newString);
+            processor.processFiles();
         } catch (FileNotFoundException e) {
             System.out.println("Input File does not exist. Program will exit.");
             return;
         } catch (FileAlreadyExistsException e) {
             System.out.println("The output file already exits. Program will exit.");
+            return;
+        } catch (Exception e) {
+            System.out.println("Unknown Exception occured. Program will exit.");
             return;
         }
     }

@@ -5,7 +5,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 
 import common.AbstractStreamProcessor;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +30,16 @@ public class TextStreamProcessor extends AbstractStreamProcessor {
     
     public void processFiles() throws IOException {
         
-        byte[] bytes = new byte[1024 * 128];
+        int readBufferSize = 128;
+        long fileSizeInBytes = inputFile.length();
+        
+        if (fileSizeInBytes < 128 * 1024 * 1024 ) {
+             readBufferSize = (int) fileSizeInBytes;
+        } else {
+             readBufferSize = 128 * 1024 * 1024;
+        }
+        
+        byte[] bytes = new byte[readBufferSize];
         FileInputStream fileInputStream = new FileInputStream(inputFile);
         FileOutputStream fileOutputStream = new FileOutputStream(outputFile);
         

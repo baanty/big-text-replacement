@@ -32,4 +32,10 @@ public class InputPreProcessor {
         return outputFile;
     }
     
+    
+    public static boolean isValidInputFile(File inputFile) {
+        String fileName = inputFile.getName().toLowerCase();
+        return (fileName.endsWith("txt") || fileName.endsWith("xml"));
+    }
+    
 }

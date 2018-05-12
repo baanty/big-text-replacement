@@ -28,9 +28,11 @@ public class ProcessorFactory {
         switch (fileType) {
             case XML : {
                 streamProcessor = new XmlStreamProcessor(inputFile, outputFile, stringToReplace, newString);
+                break;
             }
             case TXT : {
                 streamProcessor = new TextStreamProcessor(inputFile, outputFile, stringToReplace, newString);
+                break;
             }
         }
         return streamProcessor;
