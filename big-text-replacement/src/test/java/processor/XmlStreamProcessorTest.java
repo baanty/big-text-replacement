@@ -23,13 +23,13 @@ import org.junit.Test;
 
 public class XmlStreamProcessorTest {
 
-    private File inputXmlFile;
+    private File inputFile;
 
-    private File outputXmlFile;
+    private File outputFile;
 
-    private String stringToReplaceInAtrribute;
+    private String stringToReplace;
 
-    private String newStringINAtrribute;
+    private String newString;
 
     private XmlStreamProcessor xmlProcessor;
 
@@ -41,32 +41,33 @@ public class XmlStreamProcessorTest {
 
     @Before
     public void setUp() throws Exception {
-        inputXmlFile = Paths.get(this.getClass().getClassLoader().getResource("example-config.xml").toURI()).toFile();
-        outputXmlFile = new File(inputXmlFile.getParent() + File.separator + "example-config-output.xml");
-        stringToReplaceInAtrribute = "trace";
-        newStringINAtrribute = "error";
+        inputFile = Paths.get(this.getClass().getClassLoader().getResource("example-config.xml").toURI()).toFile();
+        outputFile = new File(inputFile.getParent() + File.separator + "example-config-output.xml");
+        stringToReplace = "trace";
+        newString = "error";
     }
 
     @After
     public void cleanUp() {
-        if (outputXmlFile.exists()) {
-            outputXmlFile.delete();
+        if (outputFile.exists()) {
+            outputFile.delete();
         }
     }
 
     @Test
     public void testProcessXmlFiles() throws XMLStreamException, FileNotFoundException {
-        xmlProcessor = new XmlStreamProcessor(inputXmlFile, outputXmlFile, stringToReplaceInAtrribute,
-                newStringINAtrribute);
-        xmlProcessor.processXmlFiles();
+        xmlProcessor = new XmlStreamProcessor(inputFile, outputFile, stringToReplace,
+                newString);
+        xmlProcessor.processFiles();
 
-        XMLEventReader eventReader = IN_FACTORY.createXMLEventReader(new FileInputStream(outputXmlFile), "UTF-8");
+        XMLEventReader eventReader = IN_FACTORY.createXMLEventReader(new FileInputStream(outputFile), "UTF-8");
 
         while (eventReader.hasNext()) {
             XMLEvent event = eventReader.nextEvent();
             switch (event.getEventType()) {
             case XMLStreamConstants.START_ELEMENT: {
                 StartElement startElement = event.asStartElement();
+                @SuppressWarnings("unchecked")
                 Iterator<Attribute> attrs = startElement.getAttributes();
                 while (attrs.hasNext()) {
                     Attribute attr = attrs.next();

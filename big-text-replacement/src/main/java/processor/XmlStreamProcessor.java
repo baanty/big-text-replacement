@@ -21,19 +21,28 @@ import javax.xml.stream.events.Attribute;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 
-import lombok.RequiredArgsConstructor;
+import common.AbstractStreamProcessor;
 
+/**
+ * 
+ * @author Pijush Kanti Das
+ * This class will replace the desired text in the attributes of an input XMl file.
+ * 
+ * Stax Parser is used to read, modify and write the XML files.
+ * Please refer to the Oracle documentation. 
+ * 
+ * @see <a href="https://docs.oracle.com/javase/tutorial/jaxp/stax/why.html" >Reason Behind Stax</a>
+ * 
+ * This justifies that STax is suitable to read, manipulate the XML tree in forward direction.
+ * At the same time, it helps write the output XML to a stream. As the output will be in a stream, 
+ * The heap will always be light weight.
+ * 
+ * Also, in the below program, the buffer is always flushed after processing one single event.
+ * So, the heap is always light. No matter how big the incoming or outgoing XMLs are.
+ *
+ */
 
-@RequiredArgsConstructor
-public class XmlStreamProcessor {
-    
-    @SuppressWarnings("unused")
-    private XmlStreamProcessor() throws RuntimeException{
-        inputXmlFile = null;
-        outputXmlFile = null;
-        stringToReplaceInAtrribute = null;
-        newStringINAtrribute = null;
-    }
+public class XmlStreamProcessor extends AbstractStreamProcessor{
 
     private static final XMLEventFactory EVENT_FACTORY = XMLEventFactory.newInstance();
     
@@ -41,23 +50,43 @@ public class XmlStreamProcessor {
 
     private static final XMLOutputFactory OUT_FACTORY = XMLOutputFactory.newInstance();
 
-    private final File inputXmlFile;
+    
 
-    private final File outputXmlFile;
-    
-    private final String stringToReplaceInAtrribute;
-    
-    private final String newStringINAtrribute;
+
+    /**
+     * @param inputFile : The input file to be used for changing the text
+     * @param outputFile ; The output file for text replacement
+     * @param stringToReplace ; The string which will be searched and replaced.
+     * @param newString ; The new string, which will replace the old one.
+     */
+    public XmlStreamProcessor(File inputFile, File outputFile, String stringToReplace, String newString) {
+        super(inputFile, outputFile, stringToReplace, newString);
+    }
+
+
+
 
     /**
      * This method will process the XML file, which is loaded in the 
      * Constructor path of this class.
+     * 
+     * Stax Parser is used to read, modify and write the XML files.
+     * Please refer to the Oracle documentation. 
+     * 
+     * @see <a href="https://docs.oracle.com/javase/tutorial/jaxp/stax/why.html" >Reason Behind Stax</a>
+     * 
+     * This justifies that STax is suitable to read, manipulate the XML tree in forward direction.
+     * At the same time, it helps write the output XML to a stream. As the output will be in a stream, 
+     * The heap will always be light weight.
+     * 
+     * Also, in the below program, the buffer is always flushed after processing one single event.
+     * So, the heap is always light. No matter how big the incoming or outgoing XMLs are.
      */
     @SuppressWarnings("unchecked")
-    public final void processXmlFiles() {
+    public final void processFiles() {
         try {
-            InputStream inputStream = new FileInputStream(inputXmlFile);
-            OutputStream outputStream = new FileOutputStream(outputXmlFile);
+            InputStream inputStream = new FileInputStream(inputFile);
+            OutputStream outputStream = new FileOutputStream(outputFile);
 
             XMLEventReader eventReader = IN_FACTORY.createXMLEventReader(inputStream, "UTF-8");
             XMLEventWriter eventWriter = OUT_FACTORY.createXMLEventWriter(outputStream, "UTF-8");
@@ -75,7 +104,7 @@ public class XmlStreamProcessor {
                     
                     while (attrbIterator.hasNext()) {
                         Attribute oldAttrb = attrbIterator.next();
-                        Attribute newAttribute = EVENT_FACTORY.createAttribute(oldAttrb.getName(), oldAttrb.getValue().replaceAll(stringToReplaceInAtrribute, newStringINAtrribute));
+                        Attribute newAttribute = EVENT_FACTORY.createAttribute(oldAttrb.getName(), oldAttrb.getValue().replaceAll(stringToReplace, newString));
                         newAttributes.add(newAttribute);
                     }
                     
@@ -100,5 +129,6 @@ public class XmlStreamProcessor {
             throw new RuntimeException("The XMl stream can not be opened for reading and writing", xmlStreamException);
         }
     }
+
     
 }
