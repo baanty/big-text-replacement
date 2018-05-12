@@ -33,10 +33,10 @@ public class TextStreamProcessor extends AbstractStreamProcessor {
         int readBufferSize = 128;
         long fileSizeInBytes = inputFile.length();
         
-        if (fileSizeInBytes < 128 * 1024 * 1024 ) {
+        if (fileSizeInBytes < 128 * 1024 * 1024 ) { // When the file size is less than 128 Mega Bytes.
              readBufferSize = (int) fileSizeInBytes;
         } else {
-             readBufferSize = 128 * 1024 * 1024;
+             readBufferSize = 128 * 1024 * 1024; // Otherwise, choose a read buffer size of 128 Mega bytes.
         }
         
         byte[] bytes = new byte[readBufferSize];
